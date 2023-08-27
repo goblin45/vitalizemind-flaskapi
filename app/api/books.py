@@ -7,7 +7,7 @@ from app.emotions.EmoBooksDict import get_keywords
 from app.emotions.api_keys import my_api_key
 
 books_bp = Blueprint('books', __name__)
-CORS(books_bp, resources={r"/*": {"origins": { "http://localhost:3500/content/books" } }})
+CORS(books_bp, resources={r"/*": {"origins": { "https://vitalizemind-nodeapi.onrender.com/content/books" } }})
 
 books = build('books', 'v1', developerKey = my_api_key)
 

@@ -9,7 +9,7 @@ from app.emotions.EmoVideoDict import get_keywords
 from app.emotions.api_keys import my_api_key
 
 video_bp = Blueprint('video', __name__)
-CORS(video_bp, resources={r"/*": {"origins": { "http://localhost:3500/content/video" } }})
+CORS(video_bp, resources={r"/*": {"origins": { "https://vitalizemind-nodeapi.onrender.com/content/video" } }})
 
 @video_bp.route('/getVideos', methods = ['POST'])
 def search_videos():

@@ -8,7 +8,7 @@ from app.api.books import books_bp
 from app.api.processor import processor_bp
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3500"}})
+CORS(app, resources={r"/*": {"origins": "https://vitalizemind-nodeapi.onrender.com"}})
 
 # Register blueprints
 app.register_blueprint(video_bp, url_prefix='/video')
@@ -25,7 +25,7 @@ def custom_api():
             last_searches = data_received['lastSearches']
 
             server2_data = { 'new_search' : new_search, 'last_searches' : last_searches }
-            server2_url = 'http://localhost:5000/processor/processSearchData'
+            server2_url = 'https://vitalizemind-flaskapi.onrender.com/processor/processSearchData'
 
             server2_response = requests.post(server2_url, json=server2_data)
 

@@ -7,7 +7,7 @@ from app.emotions.EmoMusicDict import get_keywords
 from app.emotions.api_keys import my_api_key
 
 music_bp = Blueprint('music', __name__)
-CORS(music_bp, resources={r"/*": {"origins": { "http://localhost:3500" } }})
+CORS(music_bp, resources={r"/*": {"origins": { "https://vitalizemind-nodeapi.onrender.com" } }})
 
 @music_bp.route('/getMusics', methods = ['POST'])
 def search_musics():
