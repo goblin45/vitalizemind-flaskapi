@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Blueprint
 from flask_cors import CORS
-from Sentiment import roberta_polarity_score
+from app.sentiment.Sentiment import roberta_polarity_score
 import string
+# from . import processor_bp
 
-app = Flask(__name__)
-CORS(app)
+processor_bp = Blueprint('processor', __name__)
 
 threshold = 45
 
@@ -59,7 +59,7 @@ def stressAnalyzer(clear_text, last_searches):
     
     return message, score 
 
-@app.route('/processSearchData', methods=['POST'])
+@processor_bp.route('/processSearchData', methods=['POST'])
 def process():
     stopwords = ['google', 'search', 'emotions']
     try: 
@@ -82,7 +82,3 @@ def process():
     except Exception as e:
         print(str(e))
         return jsonify({'Error': str(e)}), 500
-
-
-if __name__ == "__main__":
-    app.run(debug = True, port = 5001)

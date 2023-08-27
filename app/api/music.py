@@ -1,15 +1,15 @@
 from googleapiclient.discovery import build
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Blueprint
 from flask_cors import CORS
 import requests
 from langdetect import detect
-from EmoMusicDict import get_keywords
-from api_keys import my_api_key
+from app.emotions.EmoMusicDict import get_keywords
+from app.emotions.api_keys import my_api_key
 
-app = Flask(__name__)
-CORS(app, resources={r"/getMusics": {"origins": { "http://localhost:3500/content/music" } }})
+music_bp = Blueprint('music', __name__)
+CORS(music_bp, resources={r"/*": {"origins": { "http://localhost:3500" } }})
 
-@app.route('/getMusics', methods = ['POST'])
+@music_bp.route('/getMusics', methods = ['POST'])
 def search_musics():
     data_received = request.json
     preferences = []
@@ -87,6 +87,3 @@ def search_musics():
         print(music)
 
     return jsonify({ 'musicIds' : musicsToShow }), 200
-
-if __name__ == '__main__':
-    app.run(debug = True, port = 5004)

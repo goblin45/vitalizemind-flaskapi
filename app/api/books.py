@@ -1,17 +1,17 @@
 from googleapiclient.discovery import build
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Blueprint
 from flask_cors import CORS
 import requests
 from langdetect import detect
-from EmoBooksDict import get_keywords
-from api_keys import my_api_key
+from app.emotions.EmoBooksDict import get_keywords
+from app.emotions.api_keys import my_api_key
 
-app = Flask(__name__)
-CORS(app, resources={r"/getBooks": {"origins": { "http://localhost:3500/content/books" } }})
+books_bp = Blueprint('books', __name__)
+CORS(books_bp, resources={r"/*": {"origins": { "http://localhost:3500/content/books" } }})
 
 books = build('books', 'v1', developerKey = my_api_key)
 
-@app.route('/getBooks', methods = ['POST'])
+@books_bp.route('/getBooks', methods = ['POST'])
 def search_books():
     data_received = request.json
     keywords = []
@@ -67,6 +67,3 @@ def search_books():
         return jsonify({ 'books' : booksToShow }), 200
     except Exception as e:
         return jsonify({ 'message' : 'An error occurred: ' + e }), 500
-
-if __name__ == '__main__':
-    app.run(debug = True, port = 5003)

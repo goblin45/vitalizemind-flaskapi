@@ -1,17 +1,17 @@
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from langdetect import detect
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Blueprint
 from flask_cors import CORS
 import requests
-from Sentiment import roberta_polarity_score
-from EmoVideoDict import get_keywords
-from api_keys import my_api_key
+from app.sentiment.Sentiment import roberta_polarity_score
+from app.emotions.EmoVideoDict import get_keywords
+from app.emotions.api_keys import my_api_key
 
-app = Flask(__name__)
-CORS(app, resources={r"/getVideos": {"origins": { "http://localhost:3500/content/video" } }})
+video_bp = Blueprint('video', __name__)
+CORS(video_bp, resources={r"/*": {"origins": { "http://localhost:3500/content/video" } }})
 
-@app.route('/getVideos', methods = ['POST'])
+@video_bp.route('/getVideos', methods = ['POST'])
 def search_videos():
     data_received = request.json
     preferences = []
@@ -114,13 +114,9 @@ def get_like_dislike(video_id):
     except Exception as e:
         print(e)
 
-
-# @app.route('/getComments', methods = ['GET'])
 def video_comments(video_id):
 
     youtube = build('youtube', 'v3', developerKey = my_api_key)
-    # video_id = "n7_gT_hHdDQ" #has disabled comments 
-
     comments = ""
 
     try:
@@ -151,6 +147,3 @@ def video_comments(video_id):
             pass
 
     return comments
-
-if __name__ == '__main__':
-    app.run(debug=True, port = 5002)

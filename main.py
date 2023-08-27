@@ -2,9 +2,19 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import string
 import requests
+from app.api.video import video_bp
+from app.api.music import music_bp
+from app.api.books import books_bp
+from app.api.processor import processor_bp
 
 app = Flask(__name__)
-CORS(app, resources={r"/sendSearchData": {"origins": "http://localhost:3500"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:3500"}})
+
+# Register blueprints
+app.register_blueprint(video_bp, url_prefix='/video')
+app.register_blueprint(music_bp, url_prefix='/music')
+app.register_blueprint(books_bp, url_prefix='/books')
+app.register_blueprint(processor_bp, url_prefix='/processor')
 
 @app.route('/sendSearchData', methods=['POST'])
 def custom_api():
@@ -15,7 +25,7 @@ def custom_api():
             last_searches = data_received['lastSearches']
 
             server2_data = { 'new_search' : new_search, 'last_searches' : last_searches }
-            server2_url = 'http://127.0.0.1:5001/processSearchData'
+            server2_url = 'http://localhost:5000/processor/processSearchData'
 
             server2_response = requests.post(server2_url, json=server2_data)
 
@@ -33,4 +43,4 @@ def custom_api():
         return jsonify({'error' : str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug = True, port = 5000)
+    app.run(debug = True)
